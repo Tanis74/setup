@@ -1,6 +1,7 @@
+---
 # Language Version Management
-- include_tasks: asdf.yml
-# Languages
-- include_tasks: ruby.yml
-- include_tasks: elixir.yml
-- include_tasks: nodejs.yml
+- ansible.buitin.include_tasks: asdf.yml
+- ansible.buitin.include_tasks: ruby.yml
+  # Languages
+- ansible.buitin.include_tasks: elixir.yml
+- ansible.buitin.include_tasks: nodejs.yml

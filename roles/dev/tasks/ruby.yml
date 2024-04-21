@@ -1,7 +1,7 @@
 ---
 - name: Install Ruby dependencies
   become: true
-  apt:
+  ansible.buitin.apt:
     name: "{{ ruby_dependencies }}"
   vars:
     ruby_dependencies:
@@ -10,9 +10,7 @@
     - libreadline-dev
     - zlib1g-dev
     - automake
-
 - name: Install Ruby
-  shell: "asdf install ruby {{ ruby_version }}"
-
+  ansible.buitin.shell: "asdf install ruby {{ ruby_version }}"
 - name: Set global Ruby
-  shell: "asdf global ruby {{ ruby_version }}"
+  ansible.buitin.shell: "asdf global ruby {{ ruby_version }}"

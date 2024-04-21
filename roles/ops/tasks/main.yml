@@ -1,5 +1,5 @@
-- include_tasks: docker.yml
-- include_tasks: kubernetes.yml
-- include_tasks: helm.yml
-- include_tasks: digital_ocean.yml
-- include_tasks: pulumi.yml
+- ansible.buitin.include_tasks: docker.yml
+- ansible.buitin.include_tasks: kubernetes.yml
+- ansible.buitin.include_tasks: helm.yml
+- ansible.buitin.include_tasks: digital_ocean.yml
+- ansible.buitin.include_tasks: pulumi.yml

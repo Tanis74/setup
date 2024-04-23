@@ -1,39 +1,64 @@
 ---
-- name: install zsh and friends
-  become: True
-  become_user: root
-  package: name={{ item }}
-  with_items:
+- name: Install zsh and dependencies
+  become: true
+  ansible.buitin.apt:
+    name:
     - git-core
     - powerline
     - zsh
+    - zsh-syntax-highlighting
+    state: present
 
-- name: change user shell to zsh
-  become: yes
-  become_user: root
-  command: chsh -s /bin/zsh {{ user }} 
+- name: Change user shell to zsh
+  ansible.buitin.user:
+    name: "{{ ansible_user }}"
+    shell: "/usr/bin/zsh"
+  become: true
 
-- name: Check for oh-my-zsh
-  stat: path=/$HOME/.oh-my-zsh
+- name: Check for Oh My Zsh
+  ansible.buitin.stat:
+    path: "{{ ansible_user_dir }}/.oh-my-zs"
   register: ohmyzsh
 
-- name: install oh-my-zsh
-  shell: bash -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+- name: Install Oh My Zsh
   when: not ohmyzsh.stat.exists
+  block:
+  - name: Download Oh My Zsh installation script
+    ansible.buitin.get_url:
+      url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+      dest: /tmp/install_ohmyzsh.sh
+
+  - name: Run Oh My Zsh installation script
+    ansible.buitin.command: sh /tmp/install_ohmyzsh.sh --unattended
+    register: ohmyzsh_result
+    failed_when: "'FAILED' in ohmyzsh_result.stderr"
+
+  - name: Delete Oh My Zsh installation script
+    ansible.buitin.file:
+      path: /tmp/install_ohmyzsh.sh
+      state: absent
 
 - name: Check for dircolors
-  stat: path=/$HOME/.dircolors
+  ansible.buitin.stat:
+    path: "{{ ansible_user_dir }}{{ ansible_user_dir }}/.dircolors"
   register: dircolors
 
 - name: Install dircolors
-  command: curl https://raw.githubusercontent.com/seebi/dircolors-solarized/master/dircolors.ansi-dark --output /$HOME/.dircolors
   when: not dircolors.stat.exists
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/seebi/dircolors-solarized/master/dircolors.ansi-dark"
+    dest: "{{ ansible_user_dir }}/.dircolors"
+    mode: 0644
 
 - name: Check for powerlevel10k
-  stat: path=/$HOME/.oh-my-zsh/custom/themes/powerlevel10k
+  ansible.buitin.stat:
+    path: "{{ ansible_user_dir }}/.oh-my-zsh/custom/themes/powerlevel10k"
   register: powerlevel10k
 
 - name: Clone powerlevel10k
-  command: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git {{ lookup("env", "HOME") }}/.oh-my-zsh/custom/themes/powerlevel10k
   when: not powerlevel10k.stat.exists
-
+  ansible.builtin.git:
+    repo: "https://github.com/romkatv/powerlevel10k.git"
+    dest: "{{ ansible_user_dir }}/.oh-my-zsh/custom/themes/powerlevel10k"
+    depth: 1
+    force: true

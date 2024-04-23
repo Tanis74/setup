@@ -6,3 +6,5 @@ prerequisite_packages:
 - tmux
 - unzip
 - fzf
+- mc
+- htop

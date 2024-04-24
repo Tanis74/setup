@@ -1,9 +1,0 @@
----
-- name: Install Erlang
-  ansible.buitin.shell: "asdf install erlang {{ erlang_version }}"
-- name: Install Elixir
-  ansible.buitin.shell: "asdf install elixir {{ elixir_version}}"
-- name: Set global Erlang
-  ansible.buitin.shell: "asdf global erlang {{ erlang_version }}"
-- name: Set global Elixir
-  ansible.buitin.shell: "asdf global elixir {{ elixir_version }}"

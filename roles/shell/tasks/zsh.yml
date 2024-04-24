@@ -1,7 +1,7 @@
 ---
 - name: Install zsh and dependencies
   become: true
-  ansible.buitin.apt:
+  ansible.builtin.apt:
     name:
     - git-core
     - powerline
@@ -10,13 +10,13 @@
     state: present
 
 - name: Change user shell to zsh
-  ansible.buitin.user:
-    name: "{{ ansible_user }}"
-    shell: "/usr/bin/zsh"
   become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: "/usr/bin/zsh"
 
 - name: Check for Oh My Zsh
-  ansible.buitin.stat:
+  ansible.builtin.stat:
     path: "{{ ansible_user_dir }}/.oh-my-zs"
   register: ohmyzsh
 
@@ -24,23 +24,24 @@
   when: not ohmyzsh.stat.exists
   block:
   - name: Download Oh My Zsh installation script
-    ansible.buitin.get_url:
+    ansible.builtin.get_url:
       url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
       dest: /tmp/install_ohmyzsh.sh
+      mode: 0755
 
   - name: Run Oh My Zsh installation script
-    ansible.buitin.command: sh /tmp/install_ohmyzsh.sh --unattended
+    ansible.builtin.command: sh /tmp/install_ohmyzsh.sh --unattended
     register: ohmyzsh_result
     failed_when: "'FAILED' in ohmyzsh_result.stderr"
 
   - name: Delete Oh My Zsh installation script
-    ansible.buitin.file:
+    ansible.builtin.file:
       path: /tmp/install_ohmyzsh.sh
       state: absent
 
 - name: Check for dircolors
-  ansible.buitin.stat:
-    path: "{{ ansible_user_dir }}{{ ansible_user_dir }}/.dircolors"
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/.dircolors"
   register: dircolors
 
 - name: Install dircolors
@@ -51,7 +52,7 @@
     mode: 0644
 
 - name: Check for powerlevel10k
-  ansible.buitin.stat:
+  ansible.builtin.stat:
     path: "{{ ansible_user_dir }}/.oh-my-zsh/custom/themes/powerlevel10k"
   register: powerlevel10k
 

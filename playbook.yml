@@ -6,8 +6,8 @@
   - vars/tool_versions.yml
   - vars/user_environment.yml
   roles:
-  # - packages
+  - packages
   - shell
   # - workspace
-  # - ops
+  - ops
   # - dev

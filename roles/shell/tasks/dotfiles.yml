@@ -17,3 +17,6 @@
     repo: "{{ dotfiles_repo }}"
     dest: "{{ ansible_user_dir }}/dotfiles"
     force: true
+
+- name: Install dotfiles
+  ansible.builtin.shell: cd {{ ansible_user_dir }}/dotfiles && {{ dotfiles_command }}

@@ -7,11 +7,6 @@
     state: present
     validate: "/usr/sbin/visudo -cf %s"
 
-- name: Define winuser
-  ansible.builtin.command:
-    cmd: "cmd.exe /c 'echo %USERNAME%'"
-  register: winuser
-
 - name: Configure WSL
   become: true
   ansible.builtin.copy:
@@ -27,6 +22,16 @@
       enable = true
       root = /mnt/
       options = "metadata,umask=22,fmask=11"
+
+- name: Define winuser
+  ansible.builtin.command:
+    cmd: "cmd.exe /c 'echo %USERNAME%'"
+  register: winuser
+
+- name: Make ping work
+  become: true
+  ansible.builtin.command:
+    cmd: "setcap cap_net_raw+ep /usr/bin/ping"
 
 - name: Mount .ssh directory from Windows
   become: true

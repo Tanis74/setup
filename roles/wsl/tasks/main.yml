@@ -1,9 +1,11 @@
 ---
+- name
 - name: Allow user run sudo without password
   become: true
   ansible.builtin.lineinfile:
-    path: /etc/sudoers
+    path: /etc/sudoers.d/{{ ansible_user_id }}
     line: "{{ ansible_user_id }} ALL=(ALL) NOPASSWD:ALL"
+    create: true
     state: present
     validate: "/usr/sbin/visudo -cf %s"
 

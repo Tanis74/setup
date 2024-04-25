@@ -28,6 +28,6 @@
 - name: Adding existing user to docker group
   become: true
   ansible.builtin.user:
-    name: "{{ ansible_user }}"
+    name: "{{ ansible_user_id }}"
     groups: docker
     append: yes

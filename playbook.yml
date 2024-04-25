@@ -6,6 +6,7 @@
   - vars/tool_versions.yml
   - vars/user_environment.yml
   roles:
+  - wsl
   - packages
   - shell
   # - workspace

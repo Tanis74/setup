@@ -1,5 +1,6 @@
 ---
 - name: Add an apt signing key for Ansible
+  become: true
   ansible.builtin.get_url:
     url: "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367"
     dest: /etc/apt/trusted.gpg.d/ansible.asc

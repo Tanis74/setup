@@ -1,17 +1,4 @@
 ---
-# TODO: Refactor all of this lol
-# - name: Clone dotfiles, unless present
-#   ansible.buitin.shell: cd && (test -d `basename git@github.com:{{ dotfiles_repo }}.git .git` || git clone git@github.com:{{ dotfiles_repo }}.git dotfiles)
-
-# - name: Pull latest dotfiles
-#   ansible.buitin.shell: cd {{ lookup("env", "HOME") }}/dotfiles && git checkout {{ dotfiles_branch }} && git pull
-
-# - name: Install dotfiles
-#   ansible.buitin.shell: cd {{ lookup("env", "HOME") }}/dotfiles && {{ dotfiles_command }}
-
-# - name: Run PlugInstall in Vim
-#   ansible.buitin.shell: vim +'PlugInstall --sync' +qa
-
 - name: Download dotfiles
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
@@ -19,4 +6,6 @@
     force: true
 
 - name: Install dotfiles
-  ansible.builtin.shell: cd {{ ansible_user_dir }}/dotfiles && {{ dotfiles_command }}
+  ansible.builtin.script:
+    cmd: "{{ ansible_user_dir }}/dotfiles/install.sh"
+    chdir: "{{ ansible_user_dir }}/dotfiles"

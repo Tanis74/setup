@@ -14,12 +14,17 @@
     state: present
     filename: ansible
 
-- name: Install Ansible
+- name: Install ansible-lint and sshpass
   become: true
   ansible.builtin.apt:
     name:
-    - ansible
     - ansible-lint
     - sshpass
     state: latest
     update_cache: true
+
+- name: Upgrade all packages
+  become: true
+  ansible.builtin.apt:
+    upgrade: yes
+    state: latest

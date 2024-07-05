@@ -1,5 +1,4 @@
 ---
-- name
 - name: Allow user run sudo without password
   become: true
   ansible.builtin.lineinfile:

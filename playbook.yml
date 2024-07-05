@@ -7,8 +7,8 @@
   - vars/user_environment.yml
   roles:
   - wsl
-  - packages
-  - shell
+  # - packages
+  # - shell
   # - workspace
-  - ops
+  # - ops
   # - dev

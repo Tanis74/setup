@@ -29,10 +29,10 @@
     cmd: "cmd.exe /c 'echo %USERNAME%'"
   register: winuser
 
-- name: Make ping work
-  become: true
-  ansible.builtin.command:
-    cmd: "setcap cap_net_raw+ep /usr/bin/ping"
+#- name: Make ping work
+#  become: true
+#  ansible.builtin.command:
+#    cmd: "setcap cap_net_raw+ep /usr/bin/ping"
 
 - name: Mount .ssh directory from Windows
   become: true

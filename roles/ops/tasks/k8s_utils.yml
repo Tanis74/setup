@@ -1,0 +1,88 @@
+---
+- name: Check for krew
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/.krew"
+  register: krew
+
+- name: Install Krew
+  when: not krew.stat.exists
+  block:
+  - name: Create temp folder
+    ansible.builtin.file:
+      path: /tmp/krew
+      state: directory
+      mode: "0755"
+
+  - name: Download krew
+    ansible.builtin.unarchive:
+      src: "https://github.com/kubernetes-sigs/krew/releases/download/v{{ krew_version }}/krew-linux_{{ apt_arch }}.tar.gz"
+      dest: "/tmp/krew"
+      remote_src: true
+      # creates: "created_file"
+
+  - name: Install krew to kubectl
+    ansible.builtin.command:
+      cmd: "/tmp/krew/krew-linux_{{ apt_arch }} install krew"
+
+  - name: Description
+    ansible.builtin.file:
+      path: "/tmp/krew"
+      state: absent
+
+  - name: Create a symbolic link
+    become: true
+    ansible.builtin.file:
+      src: "{{ ansible_user_dir }}/.krew/bin/kubectl-krew"
+      dest: /usr/local/bin/kubectl-krew
+      state: link
+
+  - name: Run Krew Update
+    ansible.builtin.command:
+      cmd: kubectl krew update
+      creates: "{{ ansible_user_dir }}/.krew/index/plugins/krew_plugins.yaml"
+
+  - name: Get installed krew plugins
+    ansible.builtin.command:
+      cmd: "kubectl krew list"
+    register: "krew_plugins"
+
+  - name: Install krew plugins
+    ansible.builtin.command: "kubectl krew install {{ item }}"
+    when: "item|string not in krew_plugins.stdout_lines"
+    with_items:
+    # - cert-manager
+    # - ctx
+    # - exec-cronjob
+    # - get-all
+    # - krew
+    # - ns
+    # - pod-dive
+    # - roll
+    # - snap
+    - tail
+    # - view-utilization
+    # - ingress-nginx
+
+- name: Download k9s installation file
+  ansible.builtin.get_url:
+    url: "https://github.com/derailed/k9s/releases/download/v{{ k9s_version }}/k9s_linux_{{ apt_arch }}.deb"
+    dest: "/tmp/k9s.deb"
+    mode: '0755'
+
+- name: Install k9s
+  become: true
+  ansible.builtin.apt:
+    deb: "/tmp/k9s.deb"
+
+- name: Delete k9s installation file
+  ansible.builtin.file:
+    path: "/tmp/k9s.deb"
+    state: absent
+
+- name: Install kubectx
+  become: true
+  ansible.builtin.apt:
+    name:
+    - kubectx
+    state: present
+    update_cache: true

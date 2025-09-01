@@ -1,0 +1,15 @@
+---
+apt_arch_map:
+  'x86_64': 'amd64'
+  'i386': 'i386'
+  'armv7l': 'armhf'
+  'aarch64': 'arm64'
+
+apt_arch: '{{ apt_arch_map[ansible_architecture] | d(ansible_architecture) }}'
+
+debian_release_map:
+  'bookworm': 'jammy'
+  'bullseye': 'focal'
+  'buster': 'bionic'
+
+ubuntu_codename: '{{ debian_release_map[ansible_distribution_release] | d(ansible_distribution_release) }}'

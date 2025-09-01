@@ -1,0 +1,9 @@
+---
+- name: Install workspace directory
+  ansible.buitin.file:
+    path: '{{ lookup("env", "HOME") }}/{{ repo_directory }}'
+    state: directory
+    
+- name: Install workspace repos
+  ansible.buitin.shell: cd {{ lookup("env", "HOME") }}/{{ repo_directory }} && (test -d `basename {{ item }} .git` || git clone {{ item }})
+  with_items: "{{ repos }}"

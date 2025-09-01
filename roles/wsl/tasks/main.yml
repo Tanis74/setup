@@ -1,0 +1,45 @@
+---
+- name: Allow user run sudo without password
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/{{ ansible_user_id }}
+    line: "{{ ansible_user_id }} ALL=(ALL) NOPASSWD:ALL"
+    create: true
+    state: present
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Configure WSL
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/wsl.conf"
+    force: true
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    content: |
+      [boot]
+      systemd = true
+      [automount]
+      enable = true
+      root = /mnt/
+      options = "metadata,umask=22,fmask=11"
+
+- name: Define winuser
+  ansible.builtin.command:
+    cmd: "powershell.exe -Command 'Write-Output $env:USERNAME'"
+  # cmd: "cmd.exe /c 'echo %USERNAME%'"
+  register: winuser
+
+#- name: Make ping work
+#  become: true
+#  ansible.builtin.command:
+#    cmd: "setcap cap_net_raw+ep /usr/bin/ping"
+
+- name: Mount .ssh directory from Windows
+  become: true
+  ansible.posix.mount:
+    src: 'C:\Users\{{ winuser.stdout }}\.ssh\'
+    path: '{{ ansible_user_dir }}/.ssh'
+    state: mounted
+    fstype: drvfs
+    opts: 'rw,noatime,uid={{ ansible_user_uid }},gid={{ ansible_user_gid }},case=off,umask=0077,fmask=0177'

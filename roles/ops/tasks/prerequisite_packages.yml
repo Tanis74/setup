@@ -1,0 +1,11 @@
+---
+- name: Install packages that allow apt to be used over HTTPS
+  become: true
+  ansible.builtin.apt:
+    name:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+    state: present

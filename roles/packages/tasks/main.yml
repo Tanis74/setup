@@ -1,0 +1,22 @@
+---
+- name: Update apt-cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  register: result
+  until: result is succeeded
+
+- name: Upgrade all packages
+  become: true
+  ansible.builtin.apt:
+    upgrade: yes
+    state: latest
+
+- name: Install some packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ prerequisite_packages }}"
+    state: present
+  register: result
+  until: result is succeeded

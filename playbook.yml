@@ -1,0 +1,14 @@
+---
+- hosts: host
+  ### Go here to edit variables ###
+  vars_files:
+  - vars/prerequisite_packages.yml
+  - vars/tool_versions.yml
+  - vars/user_environment.yml
+  roles:
+  - wsl
+  # - packages
+  # - shell
+  # - workspace
+  # - ops
+  # - dev

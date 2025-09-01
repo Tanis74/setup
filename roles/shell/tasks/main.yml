@@ -1,0 +1,3 @@
+---
+- ansible.builtin.include_tasks: zsh.yml
+- ansible.builtin.include_tasks: dotfiles.yml

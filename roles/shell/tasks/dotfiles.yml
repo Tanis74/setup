@@ -1,0 +1,11 @@
+---
+- name: Download dotfiles
+  ansible.builtin.git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ ansible_user_dir }}/dotfiles"
+    force: true
+
+- name: Install dotfiles
+  ansible.builtin.script:
+    cmd: "{{ ansible_user_dir }}/dotfiles/install.sh"
+    chdir: "{{ ansible_user_dir }}/dotfiles"

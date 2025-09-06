@@ -1,0 +1,19 @@
+---
+apt_arch_map:
+  "x86_64": "amd64"
+  "i386": "i386"
+  "armv7l": "armhf"
+  "aarch64": "arm64"
+
+apt_arch: "{{ apt_arch_map[ansible_architecture] | d(ansible_architecture) }}"
+debian_release_map:
+  "trixie": "noble"
+  "bookworm": "jammy"
+  "bullseye": "focal"
+  "buster": "bionic"
+
+ubuntu_codename: "{{ debian_release_map[ansible_distribution_release] | d(ansible_distribution_release) }}"
+
+current_shell: "{{ ansible_user_shell | default(ansible_env.SHELL) | basename }}"
+
+current_user_dir: "{{ ansible_user_dir | default(ansible_env.HOME) }}"

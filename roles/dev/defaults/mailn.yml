@@ -1,8 +1,0 @@
----
-apt_arch_map:
-  'x86_64': 'amd64'
-  'i386': 'i386'
-  'armv7l': 'armhf'
-  'aarch64': 'arm64'
-
-apt_arch: '{{ apt__architecture_map[ansible_architecture] | d(ansible_architecture) }}'

@@ -1,7 +1,7 @@
 ---
 - name: Check for krew
   ansible.builtin.stat:
-    path: "{{ ansible_user_dir }}/.krew"
+    path: "{{ current_user_dir }}/.krew"
   register: krew
 
 - name: Install Krew
@@ -15,7 +15,7 @@
 
   - name: Download krew
     ansible.builtin.unarchive:
-      src: "https://github.com/kubernetes-sigs/krew/releases/download/v{{ krew_version }}/krew-linux_{{ apt_arch }}.tar.gz"
+      src: "https://github.com/kubernetes-sigs/krew/releases/download/{{ krew_version }}/krew-linux_{{ apt_arch }}.tar.gz"
       dest: "/tmp/krew"
       remote_src: true
       # creates: "created_file"
@@ -32,14 +32,22 @@
   - name: Create a symbolic link
     become: true
     ansible.builtin.file:
-      src: "{{ ansible_user_dir }}/.krew/bin/kubectl-krew"
+      src: "{{ current_user_dir }}/.krew/bin/kubectl-krew"
       dest: /usr/local/bin/kubectl-krew
       state: link
+
+  - name: Add krew in PATH ~/.bashrc
+    ansible.builtin.lineinfile:
+      path: "{{ current_user_dir }}/.bashrc"
+      regexp: '^export PATH="\${KREW_ROOT:-\$HOME/\.krew}/bin:\$PATH"'
+      line: export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+      create: yes
+      mode: '0644'
 
   - name: Run Krew Update
     ansible.builtin.command:
       cmd: kubectl krew update
-      creates: "{{ ansible_user_dir }}/.krew/index/plugins/krew_plugins.yaml"
+      creates: "{{ current_user_dir }}/.krew/index/plugins/krew_plugins.yaml"
 
   - name: Get installed krew plugins
     ansible.builtin.command:
@@ -63,21 +71,14 @@
     # - view-utilization
     # - ingress-nginx
 
-- name: Download k9s installation file
-  ansible.builtin.get_url:
-    url: "https://github.com/derailed/k9s/releases/download/v{{ k9s_version }}/k9s_linux_{{ apt_arch }}.deb"
-    dest: "/tmp/k9s.deb"
-    mode: '0755'
 
 - name: Install k9s
   become: true
   ansible.builtin.apt:
-    deb: "/tmp/k9s.deb"
-
-- name: Delete k9s installation file
-  ansible.builtin.file:
-    path: "/tmp/k9s.deb"
-    state: absent
+    deb: "https://github.com/derailed/k9s/releases/{{ k9s_version }}/download/k9s_linux_{{ apt_arch }}.deb"
+    state: present
+  register: result
+  until: result is succeeded
 
 - name: Install kubectx
   become: true
@@ -86,3 +87,5 @@
     - kubectx
     state: present
     update_cache: true
+  register: result
+  until: result is succeeded

@@ -6,6 +6,19 @@
     - apt-transport-https
     - ca-certificates
     - curl
-    - gnupg-agent
-    - software-properties-common
+    - gnupg
     state: present
+    update_cache: yes
+  register: result
+  until: result is succeeded
+
+- name: Install bash-completion
+  become: true
+  ansible.builtin.apt:
+    name:
+    - bash-completion
+    state: present
+    update_cache: yes
+  register: result
+  until: result is succeeded
+  when: current_shell == "bash"

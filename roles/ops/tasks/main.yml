@@ -1,8 +1,9 @@
 ---
 - ansible.builtin.include_tasks: prerequisite_packages.yml
-- ansible.builtin.include_tasks: ansible.yml
+- ansible.builtin.include_tasks: helm.yml
+- ansible.builtin.include_tasks: terraform.yml
+# - ansible.builtin.include_tasks: ansible.yml
 - ansible.builtin.include_tasks: docker.yml
 - ansible.builtin.include_tasks: minikube.yml
-- ansible.builtin.include_tasks: helm.yml
+- ansible.builtin.include_tasks: kubectl.yml
 - ansible.builtin.include_tasks: k8s_utils.yml
-- ansible.builtin.include_tasks: terraform.yml

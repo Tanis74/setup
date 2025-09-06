@@ -1,0 +1,34 @@
+---
+name: Ansible Lint and Validation
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+jobs:
+  ansible-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Ansible and dependencies
+        run: |
+          pip install ansible ansible-lint yamllint
+
+      - name: Check Ansible version
+        run: ansible --version
+
+      - name: Check playbook syntax
+        run: ansible-playbook playbook.yml --syntax-check -i inventory/hosts.yml
+
+      - name: Run yamllint
+        run: yamllint .
+
+      - name: Run ansible-lint
+        run: ansible-lint

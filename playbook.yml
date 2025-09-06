@@ -1,14 +1,6 @@
 ---
-- hosts: host
-  ### Go here to edit variables ###
-  vars_files:
-  - vars/prerequisite_packages.yml
-  - vars/tool_versions.yml
-  - vars/user_environment.yml
+- name: WSL Setup Playbook
+  hosts: host
   roles:
-  - wsl
-  # - packages
-  # - shell
-  # - workspace
-  # - ops
-  # - dev
+  - packages
+  - ops

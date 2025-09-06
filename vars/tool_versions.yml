@@ -1,4 +1,0 @@
----
-k8s_version: "1.30"
-krew_version: "0.4.4"
-k9s_version: "0.32.4"

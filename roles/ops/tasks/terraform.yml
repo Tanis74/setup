@@ -3,14 +3,14 @@
   become: true
   ansible.builtin.get_url:
     url: "https://apt.releases.hashicorp.com/gpg"
-    dest: /etc/apt/trusted.gpg.d/hashicorp.asc
+    dest: /usr/share/keyrings/hashicorp-archive-keyring.gpg
     mode: '0644'
     force: true
 
 - name: Add apt repository for Hashicorp apps
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+    repo: "deb [arch={{ apt_arch }} signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
     state: present
     filename: hashicorp
 
@@ -18,5 +18,21 @@
   become: true
   ansible.builtin.apt:
     name:
-    - terraform
+      - terraform
     state: present
+    update_cache: yes
+  register: result
+  until: result is succeeded
+
+- name: Block for bash completion
+  when: current_shell == "bash"
+  block:
+  - name: Add Terraform completion for bash
+    become: true
+    ansible.builtin.copy:
+      dest: /etc/bash_completion.d/terraform
+      content: |
+        complete -C $(which terraform) terraform
+      owner: root
+      group: root
+      mode: '0644'

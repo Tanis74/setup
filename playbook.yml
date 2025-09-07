@@ -2,5 +2,5 @@
 - name: WSL Setup Playbook
   hosts: host
   roles:
-  - packages
-  - ops
+    - packages
+    - ops

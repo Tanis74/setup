@@ -1,7 +1,7 @@
 ---
 - name: Check for krew
   ansible.builtin.stat:
-    path: "{{ current_user_dir }}/.krew"
+    path: "/usr/local/bin/kubectl-krew"
   register: krew
 
 - name: Install Krew
@@ -37,44 +37,44 @@
         dest: /usr/local/bin/kubectl-krew
         state: link
 
-    - name: Add krew in PATH ~/.bashrc
-      ansible.builtin.lineinfile:
-        path: "{{ current_user_dir }}/.bashrc"
-        regexp: '^export PATH="\${KREW_ROOT:-\$HOME/\.krew}/bin:\$PATH"'
-        line: export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-        create: true
-        mode: '0644'
+- name: Add krew in PATH ~/.bashrc
+  ansible.builtin.lineinfile:
+    path: "{{ current_user_dir }}/.bashrc"
+    regexp: '^export PATH="\${KREW_ROOT:-\$HOME/\.krew}/bin:\$PATH"'
+    line: export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+    create: true
+    mode: '0644'
 
-    - name: Run Krew Update
-      ansible.builtin.command:
-        cmd: kubectl krew update
-        creates: "{{ current_user_dir }}/.krew/index/plugins/krew_plugins.yaml"
+- name: Run Krew Update
+  ansible.builtin.command:
+    cmd: kubectl krew update
+    creates: "{{ current_user_dir }}/.krew/index/plugins/krew_plugins.yaml"
 
-    - name: Get installed krew plugins
-      ansible.builtin.command:
-        cmd: "kubectl krew list"
-      register: "krew_plugins"
-      changed_when: krew_plugins.rc != 0
+- name: Get installed krew plugins
+  ansible.builtin.command:
+    cmd: "kubectl krew list"
+  register: "krew_plugins"
+  changed_when: krew_plugins.rc != 0
 
 
-    - name: Install krew plugins
-      ansible.builtin.command: "kubectl krew install {{ item }}"
-      when: "item|string not in krew_plugins.stdout_lines"
-      with_items:
-        # - cert-manager
-        # - ctx
-        # - exec-cronjob
-        # - get-all
-        # - krew
-        # - ns
-        # - pod-dive
-        # - roll
-        # - snap
-        - tail
-        # - view-utilization
-        # - ingress-nginx
-      register: output
-      changed_when: output.rc != 0
+- name: Install krew plugins
+  ansible.builtin.command: "kubectl krew install {{ item }}"
+  when: "item|string not in krew_plugins.stdout_lines"
+  with_items:
+    # - cert-manager
+    # - ctx
+    # - exec-cronjob
+    # - get-all
+    # - krew
+    # - ns
+    # - pod-dive
+    # - roll
+    # - snap
+    - tail
+    # - view-utilization
+    # - ingress-nginx
+  register: output
+  changed_when: output.rc != 0
 
 - name: Install k9s
   become: true

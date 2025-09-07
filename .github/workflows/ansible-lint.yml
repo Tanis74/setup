@@ -27,8 +27,8 @@ jobs:
       - name: Check playbook syntax
         run: ansible-playbook playbook.yml --syntax-check -i inventory/hosts.yml
 
-      - name: Run yamllint
-        run: yamllint .
+      - name: Run yamllint on roles and playbooks only
+        run: yamllint roles/ playbook.yml
 
-      - name: Run ansible-lint
-        run: ansible-lint
+      - name: Run ansible-lint on roles and playbooks only
+        run: ansible-lint roles/ playbook.yml

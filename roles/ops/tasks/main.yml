@@ -11,11 +11,11 @@
 # - name: Include Ansible tasks
 #   ansible.builtin.include_tasks: ansible.yml
 
-- name: Include Docker tasks
-  ansible.builtin.include_tasks: docker.yml
+# - name: Include Docker tasks
+#   ansible.builtin.include_tasks: docker.yml
 
-- name: Include Minikube tasks
-  ansible.builtin.include_tasks: minikube.yml
+# - name: Include Minikube tasks
+#   ansible.builtin.include_tasks: minikube.yml
 
 - name: Include kubectl tasks
   ansible.builtin.include_tasks: kubectl.yml

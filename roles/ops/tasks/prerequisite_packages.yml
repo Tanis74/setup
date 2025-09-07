@@ -3,10 +3,10 @@
   become: true
   ansible.builtin.apt:
     name:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - gnupg
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
     state: present
     update_cache: true
   register: result
@@ -16,7 +16,7 @@
   become: true
   ansible.builtin.apt:
     name:
-    - bash-completion
+      - bash-completion
     state: present
     update_cache: true
   register: result

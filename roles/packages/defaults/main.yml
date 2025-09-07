@@ -1,10 +1,10 @@
 ---
 prerequisite_packages:
-- vim
-- git
-- curl
-- tmux
-- unzip
-- fzf
-- mc
-- htop
+  - vim
+  - git
+  - curl
+  - tmux
+  - unzip
+  - fzf
+  - mc
+  - htop

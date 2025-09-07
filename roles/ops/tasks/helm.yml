@@ -27,8 +27,8 @@
 - name: Block for bash completion
   when: current_shell == "bash"
   block:
-  - name: Add Terraform completion for bash
-    become: true
-    ansible.builtin.shell: helm completion bash > /etc/bash_completion.d/helm
-    args:
-      creates: /etc/bash_completion.d/helm
+    - name: Add Terraform completion for bash
+      become: true
+      ansible.builtin.shell: helm completion bash > /etc/bash_completion.d/helm
+      args:
+        creates: /etc/bash_completion.d/helm

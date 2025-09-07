@@ -27,12 +27,12 @@
 - name: Block for bash completion
   when: current_shell == "bash"
   block:
-  - name: Add Terraform completion for bash
-    become: true
-    ansible.builtin.copy:
-      dest: /etc/bash_completion.d/terraform
-      content: |
-        complete -C $(which terraform) terraform
-      owner: root
-      group: root
-      mode: '0644'
+    - name: Add Terraform completion for bash
+      become: true
+      ansible.builtin.copy:
+        dest: /etc/bash_completion.d/terraform
+        content: |
+          complete -C $(which terraform) terraform
+        owner: root
+        group: root
+        mode: '0644'

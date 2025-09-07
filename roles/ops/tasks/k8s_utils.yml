@@ -7,69 +7,69 @@
 - name: Install Krew
   when: not krew.stat.exists
   block:
-  - name: Create temp folder
-    ansible.builtin.file:
-      path: /tmp/krew
-      state: directory
-      mode: "0755"
+    - name: Create temp folder
+      ansible.builtin.file:
+        path: /tmp/krew
+        state: directory
+        mode: "0755"
 
-  - name: Download krew
-    ansible.builtin.unarchive:
-      src: "https://github.com/kubernetes-sigs/krew/releases/download/{{ krew_version }}/krew-linux_{{ apt_arch }}.tar.gz"
-      dest: "/tmp/krew"
-      remote_src: true
-      # creates: "created_file"
+    - name: Download krew
+      ansible.builtin.unarchive:
+        src: "https://github.com/kubernetes-sigs/krew/releases/download/{{ krew_version }}/krew-linux_{{ apt_arch }}.tar.gz"
+        dest: "/tmp/krew"
+        remote_src: true
+        # creates: "created_file"
 
-  - name: Install krew to kubectl
-    ansible.builtin.command:
-      cmd: "/tmp/krew/krew-linux_{{ apt_arch }} install krew"
+    - name: Install krew to kubectl
+      ansible.builtin.command:
+        cmd: "/tmp/krew/krew-linux_{{ apt_arch }} install krew"
 
-  - name: Description
-    ansible.builtin.file:
-      path: "/tmp/krew"
-      state: absent
+    - name: Description
+      ansible.builtin.file:
+        path: "/tmp/krew"
+        state: absent
 
-  - name: Create a symbolic link
-    become: true
-    ansible.builtin.file:
-      src: "{{ current_user_dir }}/.krew/bin/kubectl-krew"
-      dest: /usr/local/bin/kubectl-krew
-      state: link
+    - name: Create a symbolic link
+      become: true
+      ansible.builtin.file:
+        src: "{{ current_user_dir }}/.krew/bin/kubectl-krew"
+        dest: /usr/local/bin/kubectl-krew
+        state: link
 
-  - name: Add krew in PATH ~/.bashrc
-    ansible.builtin.lineinfile:
-      path: "{{ current_user_dir }}/.bashrc"
-      regexp: '^export PATH="\${KREW_ROOT:-\$HOME/\.krew}/bin:\$PATH"'
-      line: export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-      create: true
-      mode: '0644'
+    - name: Add krew in PATH ~/.bashrc
+      ansible.builtin.lineinfile:
+        path: "{{ current_user_dir }}/.bashrc"
+        regexp: '^export PATH="\${KREW_ROOT:-\$HOME/\.krew}/bin:\$PATH"'
+        line: export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+        create: true
+        mode: '0644'
 
-  - name: Run Krew Update
-    ansible.builtin.command:
-      cmd: kubectl krew update
-      creates: "{{ current_user_dir }}/.krew/index/plugins/krew_plugins.yaml"
+    - name: Run Krew Update
+      ansible.builtin.command:
+        cmd: kubectl krew update
+        creates: "{{ current_user_dir }}/.krew/index/plugins/krew_plugins.yaml"
 
-  - name: Get installed krew plugins
-    ansible.builtin.command:
-      cmd: "kubectl krew list"
-    register: "krew_plugins"
+    - name: Get installed krew plugins
+      ansible.builtin.command:
+        cmd: "kubectl krew list"
+      register: "krew_plugins"
 
-  - name: Install krew plugins
-    ansible.builtin.command: "kubectl krew install {{ item }}"
-    when: "item|string not in krew_plugins.stdout_lines"
-    with_items:
-    # - cert-manager
-    # - ctx
-    # - exec-cronjob
-    # - get-all
-    # - krew
-    # - ns
-    # - pod-dive
-    # - roll
-    # - snap
-    - tail
-    # - view-utilization
-    # - ingress-nginx
+    - name: Install krew plugins
+      ansible.builtin.command: "kubectl krew install {{ item }}"
+      when: "item|string not in krew_plugins.stdout_lines"
+      with_items:
+        # - cert-manager
+        # - ctx
+        # - exec-cronjob
+        # - get-all
+        # - krew
+        # - ns
+        # - pod-dive
+        # - roll
+        # - snap
+        - tail
+        # - view-utilization
+        # - ingress-nginx
 
 
 - name: Install k9s
@@ -84,7 +84,7 @@
   become: true
   ansible.builtin.apt:
     name:
-    - kubectx
+      - kubectx
     state: present
     update_cache: true
   register: result

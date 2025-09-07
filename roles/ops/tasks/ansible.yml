@@ -18,11 +18,10 @@
   become: true
   ansible.builtin.apt:
     name:
-    - ansible
-    - ansible-lint
-    - sshpass
+      - ansible
+      - ansible-lint
+      - sshpass
     state: latest
     update_cache: true
   register: result
   until: result is succeeded
-

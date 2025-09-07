@@ -1,5 +1,9 @@
 extends: default
 rules:
   line-length:
-    max: 120
+    max: 160
     level: warning
+  indentation:
+    spaces: consistent
+    indent-sequences: consistent
+    check-multi-line-strings: false

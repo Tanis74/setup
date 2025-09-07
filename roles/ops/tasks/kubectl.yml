@@ -27,9 +27,8 @@
 - name: Block for bash completion
   when: current_shell == "bash"
   block:
-  - name: Add Terraform completion for bash
-    become: true
-    ansible.builtin.shell: kubectl completion bash > /etc/bash_completion.d/kubectl
-    args:
-      creates: /etc/bash_completion.d/kubectl
-
+    - name: Add Terraform completion for bash
+      become: true
+      ansible.builtin.shell: kubectl completion bash > /etc/bash_completion.d/kubectl
+      args:
+        creates: /etc/bash_completion.d/kubectl

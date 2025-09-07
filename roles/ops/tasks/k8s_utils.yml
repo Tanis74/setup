@@ -41,7 +41,7 @@
       path: "{{ current_user_dir }}/.bashrc"
       regexp: '^export PATH="\${KREW_ROOT:-\$HOME/\.krew}/bin:\$PATH"'
       line: export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-      create: yes
+      create: true
       mode: '0644'
 
   - name: Run Krew Update

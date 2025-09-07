@@ -2,7 +2,7 @@
 - name: Update apt-cache
   become: true
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
   register: result
   until: result is succeeded
@@ -10,7 +10,7 @@
 - name: Upgrade all packages
   become: true
   ansible.builtin.apt:
-    upgrade: yes
+    upgrade: true
     state: latest
 
 - name: Install some packages

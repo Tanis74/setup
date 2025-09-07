@@ -20,7 +20,7 @@
     name:
       - kubectl
     state: present
-    update_cache: yes
+    update_cache: true
   register: result
   until: result is succeeded
 
@@ -28,7 +28,7 @@
   when: current_shell == "bash"
   block:
   - name: Add Terraform completion for bash
-    become: yes
+    become: true
     ansible.builtin.shell: kubectl completion bash > /etc/bash_completion.d/kubectl
     args:
       creates: /etc/bash_completion.d/kubectl

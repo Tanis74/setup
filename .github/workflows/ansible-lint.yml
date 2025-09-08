@@ -2,9 +2,9 @@
 name: Ansible Lint and Validation
 on:
   push:
-    branches: [main, master]
+    branches: [ main, master ]
   pull_request:
-    branches: [main, master]
+    branches: [ main, master ]
 jobs:
   ansible-lint:
     runs-on: ubuntu-latest
@@ -27,8 +27,8 @@ jobs:
       - name: Check playbook syntax
         run: ansible-playbook playbook.yml --syntax-check -i inventory/hosts.yml
 
-      - name: Run yamllint on roles and playbooks only
-        run: yamllint roles/ playbook.yml
+      - name: Run yamllint
+        run: yamllint .
 
-      - name: Run ansible-lint on roles and playbooks only
-        run: ansible-lint roles/ playbook.yml
+      - name: Run ansible-lint
+        run: ansible-lint .

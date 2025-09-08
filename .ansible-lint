@@ -1,7 +1,8 @@
 ---
 profile: production
 exclude_paths:
-  - .github/workflows/
+  - .github/
+  - "${PWD}/.github/"
 warn_list:
   - package-latest
   - var-naming[no-role-prefix]
